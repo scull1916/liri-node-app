@@ -39,7 +39,7 @@ function myTweets()
 		{
 			//display the twitter object body
 			console.log("Twitter output:" + JSON.stringify(tweets, null, 2));
-			// console.log("Tweets: " + JSON.stringify(tweets, null, 2));
+			
 
 			console.log("Response: " + response);
 		}
