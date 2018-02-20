@@ -5,11 +5,10 @@ var keyList = require("./keys.js");
 
 //set twitter request to a variable
 var Twitter = require("twitter");
+var Spotify = require("node-spotify-api");
 
 //set variables to access spotify and twitter keys
-// var spotify = new Spotify(keys.spotify);
 
-//
 var client = new Twitter(
 	{consumer_key: process.env.TWITTER_CONSUMER_KEY,
 	consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -17,8 +16,15 @@ var client = new Twitter(
 	access_token_secret: process.env.TWITTER_TOKEN_SECRET
 	});
 
-//Take an argument which will be the command given to LIRI
-var liriCmd = process.argv[2];
+var spotify = new Spotify(
+	{
+		id: process.env.SPOTIFY_ID,
+		secret: process.env.SPOTIFY_SECRET
+
+	});
+
+//set a variable to accept a command to be given to LIRI
+var liriCmd = process.argv;
 
 
 
@@ -49,9 +55,32 @@ function myTweets()
 	});
 }
 
+function spotifyThisSong()
+{
+	//send the request to the Spotify API
+	spotify.search({
+		type: "track",
+		query: "Where the Streets Have No Name"
+	}).then (function(response)
+
+	{
+		console.log("Spotify output: " + JSON.stringify(response, null, 2));
+
+	}).catch (function (err)
+		{
+			console.log("Error occurred: " + err);
+		});
+
+		// console.log("Spotify output: " + data);
+}
+
 //LIRI Commands
-if (liriCmd == "my-tweets"){
-	myTweets();
+// if (liriCmd == "my-tweets"){
+// 	myTweets();
+// }
+if (liriCmd == "spotify-this-song")
+{
+	spotifyThisSong();
 }
 
 //node liri.js spotify-this-song '<song name here>' :: collect Artist, Song name, preview link from Spotify, 
