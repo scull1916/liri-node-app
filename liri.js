@@ -24,7 +24,7 @@ var spotify = new Spotify(
 	});
 
 //set a variable to accept a command to be given to LIRI
-var liriCmd = process.argv;
+var liriCmd = process.argv[2];
 
 
 
@@ -58,20 +58,27 @@ function myTweets()
 function spotifyThisSong()
 {
 	//send the request to the Spotify API
-	spotify.search({
+	spotify.search(
+	{
 		type: "track",
 		query: "Where the Streets Have No Name"
-	}).then (function(response)
+	}, function(err, data)
 
 	{
-		console.log("Spotify output: " + JSON.stringify(response, null, 2));
+		if (err){
 
-	}).catch (function (err)
-		{
-			console.log("Error occurred: " + err);
-		});
+			return console.log("Error: " + err);
+		}
 
-		// console.log("Spotify output: " + data);
+
+		console.log("Spotify output: " + JSON.stringify(data, null, 2));
+});
+}
+
+//request data from OMDB API using the npm Request package
+function movieThis()
+{
+	console.log("movie-this component");
 }
 
 //LIRI Commands
