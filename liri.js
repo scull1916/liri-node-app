@@ -3,34 +3,29 @@ require("dotenv").config();
 //import keys.js
 var keyList = require("./keys.js");
 
-//set twitter request to a variable
+//set API requests to individual variables
 var Twitter = require("twitter");
 var Spotify = require("node-spotify-api");
+var request = require("request");
 
-//set variables to access spotify and twitter keys
+//set variable to access twitter keys to pass to the API
 
 var client = new Twitter(keyList.twitter);
-// ,
-// 	consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-// 	access_token_key: process.env.TWITTER_TOKEN_KEY,
-// 	access_token_secret: process.env.TWITTER_TOKEN_SECRET
-// 	});
+
+//set variable to access spotify keys to pass to the API
 
 var spotify = new Spotify(keyList.spotify);
-	// {
-	// 	id: process.env.SPOTIFY_ID,
-	// 	secret: process.env.SPOTIFY_SECRET
 
-	// });
 
 //set a variable to accept a command to be given to LIRI
 var liriCmd = process.argv[2];
 
-//set a variable to accept a song or movie title
+//set a variable to accept a song or movie title -- set as a separate variable in the event a user does not
+//enter a title value, the app will still run.
 var title = process.argv[3];
 
 
-	//call the npm request package ***REVIEW NPM docs in gitHub repo, see class notes for link***
+
 
 //node liri.js my-tweets :: batch last 20 tweets, when each tweet was created, display in bash
 function myTweets()
@@ -39,10 +34,7 @@ function myTweets()
 	//send request to Twitter API
 	client.get("https://api.twitter.com/1.1/search/tweets.json?count=20&screen_name=wodewoseyew", {q: 'wodewoseyew'}, function(error, tweets, response)
 	{
-		// console.log(tweets.text);
-		
-		//error-checking: if the request is successful
-		// if (!error && tweets.statusCode === 200)
+
 		if(error) throw error;
 		{
 			//display the twitter object body
@@ -52,7 +44,7 @@ function myTweets()
 			console.log("Response: " + response);
 		}
 
-		// console.log(error);
+		console.log(error);
 
 	});
 }
@@ -82,6 +74,13 @@ function spotifyThisSong()
 function movieThis()
 {
 	console.log("movie-this component");
+
+	request("http://www.omdbapi.com/?apikey=trilogy&t='Star Wars", function (error, response, body)
+	{
+		console.log("error: ", error);
+		console.log("status code: ", response && response.statusCode);
+		console.log("body: ", JSON.stringify(body, null, 2));
+	});
 }
 
 //LIRI Commands
@@ -101,13 +100,7 @@ switch (liriCmd)
 		break;
 }
 
-// if (liriCmd == "my-tweets"){
-// 	myTweets();
-// }
-// if (liriCmd == "spotify-this-song")
-// {
-// 	spotifyThisSong();
-// }
+
 
 //node liri.js spotify-this-song '<song name here>' :: collect Artist, Song name, preview link from Spotify, 
 //Album where the song appears, display all in bash. If the song requested is not available then default to
@@ -116,6 +109,7 @@ switch (liriCmd)
 
 
 //node liri.js movie-this ...will pull in movie data from OMDB
+var omdbReq = "http://www.omdbapi.com/?apikey=trilogy&";
 
 
 
