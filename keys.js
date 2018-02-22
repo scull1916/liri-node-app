@@ -14,8 +14,3 @@ exports.spotify =
 	secret: process.env.SPOTIFY_SECRET
 };
 
-// module.exports =
-// {
-// 	twitter: twitter,
-// 	spotify: spotify
-// }

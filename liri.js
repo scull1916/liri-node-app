@@ -17,6 +17,7 @@ var client = new Twitter(keyList.twitter);
 var spotify = new Spotify(keyList.spotify);
 
 
+
 //set a variable to accept a command to be given to LIRI
 var liriCmd = process.argv[2];
 
@@ -38,7 +39,8 @@ function myTweets()
 		if(error) throw error;
 		{
 			//display the twitter object body
-			console.log("Twitter output:" + JSON.stringify(tweets, null, 2));
+			// console.log("Twitter output:" + JSON.stringify(tweets, null, 2));
+			console.log([response]);
 			
 
 			console.log("Response: " + response);
@@ -75,7 +77,7 @@ function movieThis()
 {
 	console.log("movie-this component");
 
-	request("http://www.omdbapi.com/?apikey=trilogy&t='Star Wars", function (error, response, body)
+	request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t='Star Wars'", function (error, response, body)
 	{
 		console.log("error: ", error);
 		console.log("status code: ", response && response.statusCode);
