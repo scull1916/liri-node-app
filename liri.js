@@ -79,9 +79,12 @@ function movieThis()
 
 	request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t=" + title, function (error, response, body)
 	{
+		var movieData = JSON.stringify(body, null, 2);
+		var movieParser = JSON.parse(body);
 		console.log("error: ", error);
 		console.log("status code: ", response && response.statusCode);
-		console.log("body: ", JSON.stringify(body, null, 2));
+		// console.log("body: ", JSON.stringify(body, null, 2));
+		console.log("Title: ",movieParser.Title);
 	});
 }
 
