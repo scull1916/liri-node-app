@@ -77,7 +77,7 @@ function movieThis()
 {
 	console.log("movie-this component");
 
-	request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t='Star Wars'", function (error, response, body)
+	request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t=" + title, function (error, response, body)
 	{
 		console.log("error: ", error);
 		console.log("status code: ", response && response.statusCode);
