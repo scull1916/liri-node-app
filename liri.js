@@ -67,8 +67,13 @@ function spotifyThisSong()
 			return console.log("Error: " + err);
 		}
 
-		console.log("Test: " + spotify.album);
+
+		// console.log("Test: " + spotify.album);
 		console.log("Spotify output: " + JSON.stringify(data, null, 2));
+		
+		var musicParser = JSON.parse(data);
+		console.log("Spotify output: " + musicParser);
+
 });
 }
 
@@ -79,12 +84,21 @@ function movieThis()
 
 	request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t=" + title, function (error, response, body)
 	{
-		var movieData = JSON.stringify(body, null, 2);
-		var movieParser = JSON.parse(body);
+
 		console.log("error: ", error);
 		console.log("status code: ", response && response.statusCode);
-		// console.log("body: ", JSON.stringify(body, null, 2));
-		console.log("Title: ",movieParser.Title);
+
+		var movieParser = JSON.parse(body);
+
+		//ouput data from api object
+		console.log("Title: ", movieParser.Title);
+		console.log("Year: ", movieParser.Year);
+		console.log("IMDB Rating: ", movieParser.imdbRating);
+		console.log("Rotten Tomatoes Rating: ", movieParser.Ratings[2]);
+		console.log("Country: ", movieParser.Country);
+		console.log("Language: ", movieParser.Language);
+		console.log("Plot: ", movieParser.Plot);
+		console.log("Actors: ", movieParser.Actors);
 	});
 }
 
