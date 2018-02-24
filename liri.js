@@ -7,6 +7,7 @@ var keyList = require("./keys.js");
 var Twitter = require("twitter");
 var Spotify = require("node-spotify-api");
 var request = require("request");
+var fs = require("fs");
 
 //set variable to access twitter keys to pass to the API
 
@@ -102,6 +103,22 @@ function movieThis()
 	});
 }
 
+function doWhatItSays()
+{
+	console.log("I'll do it!");
+
+	//call the random text file containing the instruction(s) for this fx
+	fs.open("#", "r", (err,fd)) =>
+	{
+		if (err) throw err;
+
+		console.log("something here");
+
+		
+	}
+
+}
+
 //LIRI Commands
 
 switch (liriCmd)
@@ -116,6 +133,10 @@ switch (liriCmd)
 
 	case "movie-this":
 		movieThis();
+		break;
+
+	case "do-what-it-says":
+		doWhatItSays();
 		break;
 }
 
