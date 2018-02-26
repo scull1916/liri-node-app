@@ -39,21 +39,27 @@ function myTweets()
 
 		if(error) throw error;
 		{
+			var empty = "";
 			//display the twitter object body
 			var twitOut = JSON.stringify(tweets,null,2);
 
 			console.log(JSON.parse(twitOut));
 
+
+
 			for (i=0; i<20; i++)
 			{
 			// console.log(Object.getOwnPropertyNames(JSON.parse(twitOut).statuses[0]));
-			console.log("increment: ", i);
-			console.log("*********************************************************");
-			console.log("Tweet: \n", JSON.parse(twitOut).statuses[i].text + "\n");
-			console.log("Created: \n", JSON.parse(twitOut).statuses[i].created_at);
+				console.log("increment: ", i);
+
+				
+				console.log("*********************************************************");
+				console.log("Tweet: \n", JSON.parse(twitOut).statuses[i]["text"] + "\n");
+				console.log("Created: \n", JSON.parse(twitOut).statuses[i]["created_at"]);
+				
+				
 			
 			}
-
 
 		}
 
@@ -64,52 +70,90 @@ function myTweets()
 
 function spotifyThisSong()
 {
-	//send the request to the Spotify API
-	spotify.search(
+	if (title == null)
 	{
-		type: "track",
-		query: title,
-		limit: 1
-	}, function(err, data)
+			//send the request to the Spotify API
+			spotify.search(
+			{
+				type: "track",
+				query: "The Sign" && "Ace of Base",
+				limit: 1
+			}, function(err, data)
+			{
 
+			
+					if (err)
+				{
+
+					return console.log("Error: " + err);
+				}
+
+					console.log(data);
+				
+					console.log("Tracks: \n", data["tracks"]["items"]);
+			});
+	}
+	
+	else
 	{
-		if (err){
+		//send the request to the Spotify API
+		spotify.search(
+		{
+			type: "track",
+			query: title,
+			limit: 1
+		}, function(err, data)
+			{
 
-			return console.log("Error: " + err);
-		}
+			
+					if (err)
+				{
 
+					return console.log("Error: " + err);
+				}
 
-		// console.log("Test: " + spotify.album);
-		// console.log("Spotify output: " + JSON.stringify(data, null, 2));
-
-
-		var spotifyOut = JSON.stringify(data, null, 2);
-
-		//may not need this
-		// var ind = indexOf("name:");
-
-		// console.log("Index? ", ind);
-
-		// console.log("mapSpot? \n**********************", Object.keys(musicParser) + Object.getOwnPropertyNames(musicParser));
+					console.log(data);
+				
+					console.log("Tracks: \n", data["tracks"]["items"]);
+				
+			});
+			
 
 
 		
-		var musicParser = JSON.parse(spotifyOut);
-		
-		// console.log("Spotify output: " + musicParser);
-		console.log("Tracks: \n", spotifyOut["tracks"]);
-		// console.log(Object.keys(spotifyOut));
-		
-		// console.log("Title: ", musicParser.tracks[1].name);
-
-
-
-});
+	}
 }
+	
 
 //request data from OMDB API using the npm Request package
 function movieThis()
 {
+	//If the user does not enter a movie title, the utility will default to a search for the movie Mr. Nobody"
+	if (title == null)
+	{
+		request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t=Mr. Nobody", function (error, response, body)
+		{
+
+			console.log("error: ", error);
+			console.log("status code: ", response && response.statusCode);
+
+			var movieParser = JSON.parse(body);
+
+			//ouput data from api object
+			console.log("Title: ", movieParser.Title);
+			console.log("Year: ", movieParser.Year);
+			console.log("IMDB Rating: ", movieParser.imdbRating);
+			console.log("Rotten Tomatoes Rating: ", movieParser.Ratings[2]);
+			console.log("Country: ", movieParser.Country);
+			console.log("Language: ", movieParser.Language);
+			console.log("Plot: ", movieParser.Plot);
+			console.log("Actors: ", movieParser.Actors);
+		});
+
+	}
+
+
+	//*********************************************
 	console.log("movie-this component");
 
 	request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t=" + title, function (error, response, body)
