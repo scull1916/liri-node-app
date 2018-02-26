@@ -32,22 +32,32 @@ var title = process.argv[3];
 //node liri.js my-tweets :: batch last 20 tweets, when each tweet was created, display in bash
 function myTweets()
 {
-
+	
 	//send request to Twitter API
-	client.get("https://api.twitter.com/1.1/search/tweets.json?count=20&screen_name=wodewoseyew", {q: 'wodewoseyew'}, function(error, tweets, response)
+	client.get("https://api.twitter.com/1.1/search/tweets.json?count=40&screen_name=wodewoseyew", {q: 'wodewoseyew'}, function(error, tweets, response)
 	{
 
 		if(error) throw error;
 		{
 			//display the twitter object body
-			// console.log("Twitter output:" + JSON.stringify(tweets, null, 2));
-			console.log([response]);
-			
+			var twitOut = JSON.stringify(tweets,null,2);
 
-			console.log("Response: " + response);
+			console.log(JSON.parse(twitOut));
+
+			for (i=0; i<20; i++)
+			{
+			// console.log(Object.getOwnPropertyNames(JSON.parse(twitOut).statuses[0]));
+			console.log("increment: ", i);
+			console.log("*********************************************************");
+			console.log("Tweet: \n", JSON.parse(twitOut).statuses[i].text + "\n");
+			console.log("Created: \n", JSON.parse(twitOut).statuses[i].created_at);
+			
+			}
+
+
 		}
 
-		console.log(error);
+		// console.log(error);
 
 	});
 }
@@ -70,10 +80,29 @@ function spotifyThisSong()
 
 
 		// console.log("Test: " + spotify.album);
-		console.log("Spotify output: " + JSON.stringify(data, null, 2));
+		// console.log("Spotify output: " + JSON.stringify(data, null, 2));
+
+
+		var spotifyOut = JSON.stringify(data, null, 2);
+
+		//may not need this
+		// var ind = indexOf("name:");
+
+		// console.log("Index? ", ind);
+
+		// console.log("mapSpot? \n**********************", Object.keys(musicParser) + Object.getOwnPropertyNames(musicParser));
+
+
 		
-		var musicParser = JSON.parse(data);
-		console.log("Spotify output: " + musicParser);
+		var musicParser = JSON.parse(spotifyOut);
+		
+		// console.log("Spotify output: " + musicParser);
+		console.log("Tracks: \n", spotifyOut["tracks"]);
+		// console.log(Object.keys(spotifyOut));
+		
+		// console.log("Title: ", musicParser.tracks[1].name);
+
+
 
 });
 }
@@ -108,14 +137,44 @@ function doWhatItSays()
 	console.log("I'll do it!");
 
 	//call the random text file containing the instruction(s) for this fx
-	fs.open("#", "r", (err,fd)) =>
+	fs.open("random.txt", "r", (err,fd) =>
 	{
 		if (err) throw err;
 
-		console.log("something here");
+		console.log(err);
 
-		
-	}
+		console.log("fd: ", fd);
+
+		fs.fstat(fd, (err, stat) =>
+		{
+			if (err) throw (err);
+			console.log("fstat err: ", err);
+
+			console.log("stat: ", JSON.stringify(stat, null, 2));
+
+			fs.close(fd, (err) =>
+			{
+				console.log("close err: ", err);
+			});
+
+		});
+
+	});
+
+	//use fs.readFile to read the contents of the random.txt file - to run node liri?
+	fs.readFile("random.txt", "utf-8", (err, data) =>
+	{
+		if (err) throw err;
+		console.log("err: ", err);
+
+		console.log("file contents? ", data);
+
+		console.log("node liri.js", data, "\r");
+
+
+
+	});
+		// spotifyThisSong();
 
 }
 
@@ -123,6 +182,10 @@ function doWhatItSays()
 
 switch (liriCmd)
 {
+	case "do-what-it-says":
+		doWhatItSays();
+		break;
+
 	case "my-tweets":
 		myTweets();
 		break;
@@ -135,9 +198,6 @@ switch (liriCmd)
 		movieThis();
 		break;
 
-	case "do-what-it-says":
-		doWhatItSays();
-		break;
 }
 
 
