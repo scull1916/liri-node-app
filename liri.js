@@ -10,14 +10,13 @@ var request = require("request");
 var fs = require("fs");
 
 //set variable to access twitter keys to pass to the API
-
 var client = new Twitter(keyList.twitter);
 
 //set variable to access spotify keys to pass to the API
-
 var spotify = new Spotify(keyList.spotify);
 
-
+//node liri.js movie-this ...will pull in movie data from OMDB
+var omdbReq = "http://www.omdbapi.com/?apikey=trilogy&";
 
 //set a variable to accept a command to be given to LIRI
 var liriCmd = process.argv[2];
@@ -25,9 +24,6 @@ var liriCmd = process.argv[2];
 //set a variable to accept a song or movie title -- set as a separate variable in the event a user does not
 //enter a title value, the app will still run.
 var title = process.argv[3];
-
-
-
 
 //node liri.js my-tweets :: batch last 20 tweets, when each tweet was created, display in bash
 function myTweets()
@@ -43,27 +39,19 @@ function myTweets()
 			//display the twitter object body
 			var twitOut = JSON.stringify(tweets,null,2);
 
-			console.log(JSON.parse(twitOut));
+			console.log(
+						"********************************************** MY-TWEETS **********************************************\n");
 
 
+			JSON.parse(twitOut).statuses.forEach(function(status){
+				console.log("Created: \n", status.created_at);
+				console.log("Tweets: \n", status.text, "\n");
+			});
 
-			for (i=0; i<20; i++)
-			{
-			// console.log(Object.getOwnPropertyNames(JSON.parse(twitOut).statuses[0]));
-				console.log("increment: ", i);
-
-				
-				console.log("*********************************************************");
-				console.log("Tweet: \n", JSON.parse(twitOut).statuses[i]["text"] + "\n");
-				console.log("Created: \n", JSON.parse(twitOut).statuses[i]["created_at"]);
-				
-				
-			
-			}
 
 		}
 
-		// console.log(error);
+
 
 	});
 }
@@ -88,9 +76,12 @@ function spotifyThisSong()
 					return console.log("Error: " + err);
 				}
 
-					console.log(data);
-				
-					console.log("Tracks: \n", data["tracks"]["items"]);
+					console.log(
+						"********************************************** SPOTIFY-THIS-SONG **********************************************\n");
+					console.log("Artist: ", data.tracks.items[0].artists[0].name, "\n");
+					console.log("Song: ", data.tracks.items[0].name, "\n");
+					console.log("Preview: ", data.tracks.items[0].preview_url, "\n");
+					console.log("Album: ", data.tracks.items[0].album.name);
 			});
 	}
 	
@@ -112,9 +103,14 @@ function spotifyThisSong()
 					return console.log("Error: " + err);
 				}
 
-					console.log(data);
-				
-					console.log("Tracks: \n", data["tracks"]["items"]);
+
+					console.log(
+						"********************************************** SPOTIFY-THIS-SONG **********************************************\n");
+					console.log("Artist: ", data.tracks.items[0].artists[0].name, "\n");
+					console.log("Song: ", data.tracks.items[0].name, "\n");
+					console.log("Preview: ", data.tracks.items[0].preview_url, "\n");
+					console.log("Album: ", data.tracks.items[0].album.name);
+					
 				
 			});
 			
@@ -134,10 +130,11 @@ function movieThis()
 		request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t=Mr. Nobody", function (error, response, body)
 		{
 
-			console.log("error: ", error);
-			console.log("status code: ", response && response.statusCode);
+
 
 			var movieParser = JSON.parse(body);
+			console.log(
+						"********************************************** MOVIE-THIS **********************************************\n");
 
 			//ouput data from api object
 			console.log("Title: ", movieParser.Title);
@@ -151,54 +148,49 @@ function movieThis()
 		});
 
 	}
-
-
-	//*********************************************
-	console.log("movie-this component");
-
-	request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t=" + title, function (error, response, body)
+	else
 	{
 
-		console.log("error: ", error);
-		console.log("status code: ", response && response.statusCode);
+		console.log(
+						"********************************************** MOVIE-THIS **********************************************\n");
 
-		var movieParser = JSON.parse(body);
+		request("http://www.omdbapi.com/?apikey=" + process.env.apikey + "&t=" + title, function (error, response, body)
+		{
 
-		//ouput data from api object
-		console.log("Title: ", movieParser.Title);
-		console.log("Year: ", movieParser.Year);
-		console.log("IMDB Rating: ", movieParser.imdbRating);
-		console.log("Rotten Tomatoes Rating: ", movieParser.Ratings[2]);
-		console.log("Country: ", movieParser.Country);
-		console.log("Language: ", movieParser.Language);
-		console.log("Plot: ", movieParser.Plot);
-		console.log("Actors: ", movieParser.Actors);
-	});
+			// console.log("error: ", error);
+			// console.log("status code: ", response && response.statusCode);
+
+			var movieParser = JSON.parse(body);
+
+			//ouput data from api object
+			console.log("Title: ", movieParser.Title);
+			console.log("Year: ", movieParser.Year);
+			console.log("IMDB Rating: ", movieParser.imdbRating);
+			console.log("Rotten Tomatoes Rating: ", movieParser.Ratings[2]);
+			console.log("Country: ", movieParser.Country);
+			console.log("Language: ", movieParser.Language);
+			console.log("Plot: ", movieParser.Plot);
+			console.log("Actors: ", movieParser.Actors);
+		});
+	}
 }
 
 function doWhatItSays()
 {
-	console.log("I'll do it!");
 
 	//call the random text file containing the instruction(s) for this fx
 	fs.open("random.txt", "r", (err,fd) =>
 	{
 		if (err) throw err;
 
-		console.log(err);
-
-		console.log("fd: ", fd);
-
 		fs.fstat(fd, (err, stat) =>
 		{
 			if (err) throw (err);
-			console.log("fstat err: ", err);
-
-			console.log("stat: ", JSON.stringify(stat, null, 2));
+			
 
 			fs.close(fd, (err) =>
 			{
-				console.log("close err: ", err);
+				
 			});
 
 		});
@@ -209,16 +201,15 @@ function doWhatItSays()
 	fs.readFile("random.txt", "utf-8", (err, data) =>
 	{
 		if (err) throw err;
-		console.log("err: ", err);
+		// console.log("err: ", err);
 
-		console.log("file contents? ", data);
+		//parse the contents of the random.txt file into line command arguments
+		var splitDat = data.split(",");
 
-		console.log("node liri.js", data, "\r");
-
-
+		spotifyThisSong(splitDat[0], splitDat[1]);
 
 	});
-		// spotifyThisSong();
+		
 
 }
 
@@ -246,18 +237,6 @@ switch (liriCmd)
 
 
 
-//node liri.js spotify-this-song '<song name here>' :: collect Artist, Song name, preview link from Spotify, 
-//Album where the song appears, display all in bash. If the song requested is not available then default to
-//"I Saw The Sign" by Ace of Base
-
-
-
-//node liri.js movie-this ...will pull in movie data from OMDB
-var omdbReq = "http://www.omdbapi.com/?apikey=trilogy&";
-
-
-
-//node do-what-it-says
 
 
 
