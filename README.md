@@ -1,4 +1,4 @@
-# liri-node-app
+# LIRI Bot
 LIRI Bot is a project I built for Node.js. From the command line call liri.js and pass a command with an optional parameter. 
 #### There are four commands:
   1) *my-tweets* which uses the Twitter API to call the 20 most recent tweets from a twitter account,
